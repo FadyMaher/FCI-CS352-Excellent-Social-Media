@@ -12,6 +12,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
  
+
+import java.util.Vector;
+
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -20,13 +23,23 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
  
+
+
+
+
 import org.glassfish.jersey.server.mvc.Viewable;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
  
+
+
+
+
 import com.FCI.SWE.Models.User;
 import com.FCI.SWE.ServicesModels.UserEntity;
+import com.google.appengine.labs.repackaged.org.json.JSONException;
  
 /**
  * This class contains REST services, also contains action function for web
@@ -45,16 +58,37 @@ public class UserController {
 	 * using url like this /rest/signup
 	 * 
 	 * @return sign up page
+	 * @throws JSONException 
 	 */
 	@POST
 	@Path("/doSearch")
-	public Response usersList(@FormParam("uname") String uname){
+	public Response usersList(@FormParam("uname") String uname) {
 		System.out.println(uname);
-		String serviceUrl = "http://localhost:8888/rest/RegistrationService";
+		String serviceUrl = "http://excellent-social-media.appspot.com/rest/SearchService";
 		String urlParameters = "uname=" + uname;
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
 				"application/x-www-form-urlencoded;charset=UTF-8");
- 
+		System.out.println(retJson);
+		JSONParser parser = new JSONParser () ;
+		Map <String , Vector<User>> passed_users = new HashMap <String,Vector<User>> ();
+		try 
+		{
+			JSONArray arr = (JSONArray) parser.parse(retJson) ; 
+			Vector <User> users = new Vector <User>() ;
+			for (int i=0 ; i<arr.size() ;i++)
+			{
+				JSONObject object ;
+				object = (JSONObject) arr.get(i) ;
+				users.add(User.ParseUserInfo(object.toJSONString()));
+			}
+			passed_users.put("usersList", users) ; 
+			 return Response.ok(new Viewable("/jsp/showUsers",passed_users )).build() ;
+		}
+		catch (ParseException e) {
+			System.out.println("Out of here");
+			e.printStackTrace();		
+		}
+		
 		return null;
 	}
 	@GET
@@ -72,6 +106,7 @@ public class UserController {
 	@GET
 	@Path("/search")
 	public Response search(){
+		System.out.println("here");
 		return Response.ok(new Viewable("/jsp/search")).build();
 	}
 	
@@ -130,7 +165,7 @@ public class UserController {
 	public String response(@FormParam("uname") String uname,
 			@FormParam("email") String email, @FormParam("password") String pass) {
  
-		String serviceUrl = "http://localhost:8888/rest/RegistrationService";
+		String serviceUrl = "http://excellent-social-media.appspot.com/rest/RegistrationService";
 		String urlParameters = "uname=" + uname + "&email=" + email
 				+ "&password=" + pass;
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
@@ -178,7 +213,7 @@ public class UserController {
 		// hna el link kanet keda "http://f...content-available-to-author-only...t.com/rest/LoginService"
 		// ana 3'yrtaha b2a :D
 		String retJson = Connection.connect(
-				"http://localhost:8888/rest/LoginService", urlParameters,
+				"http://excellent-social-media.appspot.com/rest/LoginService", urlParameters,
 				"POST", "application/x-www-form-urlencoded;charset=UTF-8");
  
 		JSONParser parser = new JSONParser();
@@ -244,10 +279,11 @@ public class UserController {
 	@Produces(MediaType.TEXT_PLAIN)
 	public String accept(@FormParam("email") String email,
 			@FormParam("femail") String femail) {
+		
 		String urlParameters = "email=" + email + "&femail=" + femail;
 		 
 		String retJson = Connection.connect(
-				"http://localhost:8888/rest/acceptRequest", urlParameters,
+				"http://excellent-social-media.appspot.com/rest/acceptRequest", urlParameters,
 				"POST", "application/x-www-form-urlencoded;charset=UTF-8");
 		
 		JSONParser parser = new JSONParser();
@@ -270,5 +306,7 @@ public class UserController {
 	
 		return "Failed";
 	}
+	
+
  
 }

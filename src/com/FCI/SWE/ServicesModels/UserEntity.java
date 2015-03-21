@@ -2,6 +2,7 @@ package com.FCI.SWE.ServicesModels;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Vector;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -173,5 +174,30 @@ public class UserEntity {
 		datastore.put(employee);
 	
 		return true;
+	}
+	
+	public static Vector<UserEntity> searchUser( String uname ) {
+
+		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
+		Query gaeQuery = new Query("users");
+		PreparedQuery pq = datastore.prepare(gaeQuery);
+		 Vector<UserEntity> users = new  Vector<UserEntity> () ;
+		 
+		
+		for (Entity entity : pq.asIterable()) {
+			
+			String Cname = entity.getProperty("name").toString();
+			if (Cname.contains(uname))
+			{
+			UserEntity user = new UserEntity(entity.getProperty("name").toString() , entity.getProperty("email").toString(), entity.getProperty("password").toString());
+			user.setId(entity.getKey().getId());
+			users.add(user);
+			}
+			
+			}
+		
+
+		return users;
 	}
 }

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -21,11 +22,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.server.mvc.Viewable;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import com.FCI.SWE.ServicesModels.UserEntity;
+
 
 /**
  * This class contains REST services, also contains action function for web
@@ -128,5 +131,25 @@ public class UserServices {
 		
 		return object.toString();
 	}
+	@POST
+	@Path("/SearchService")
+	
+	public String searchService(@FormParam("uname") String uname)
+	{
 
+		System.out.println("here");
+		Vector <UserEntity> users = UserEntity.searchUser(uname);
+		JSONArray result = new JSONArray();
+		for(UserEntity user : users)
+		{
+			JSONObject jobject = new JSONObject() ;
+			jobject.put("id" , user.getId());
+			jobject.put("name" , user.getName());
+			jobject.put("email" , user.getEmail());
+			result.add(jobject);
+		}
+		System.out.println(result.toJSONString());
+		return result.toJSONString();
+		
+	}
 }

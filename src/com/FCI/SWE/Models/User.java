@@ -39,6 +39,10 @@ public class User {
 		this.password = password;
 	}
 	
+	public User() {
+		// TODO Auto-generated constructor stub
+	}
+
 	private void setId(long id){
 		this.id = id;
 	}
@@ -96,7 +100,36 @@ public class User {
 	}
 	
 
-	
+	public static User ParseUserInfo(String json) {
+
+		JSONParser parser = new JSONParser();
+		try {
+			JSONObject object = (JSONObject) parser.parse(json);
+			User user = new User();
+			user.setEmail(object.get("email").toString()) ;
+			user.setName(object.get("name").toString()) ;
+			user.setId(Long.parseLong(object.get("id").toString()));
+			return user; 
+			
+		} 
+		catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+
+	private void setName(String na) {
+		// TODO Auto-generated method stub
+	     na = name ;
+	}
+
+	private void setEmail(String em) {
+		// TODO Auto-generated method stub
+		email = em ;
+		
+	}
 
 
 }
