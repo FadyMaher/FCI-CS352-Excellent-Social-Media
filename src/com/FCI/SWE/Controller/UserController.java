@@ -64,7 +64,7 @@ public class UserController {
 	@Path("/doSearch")
 	public Response usersList(@FormParam("uname") String uname) {
 		System.out.println(uname);
-		String serviceUrl = "http://excellent-social-media.appspot.com/rest/SearchService";
+		String serviceUrl = "http://localhost:8888/rest/SearchService";
 		String urlParameters = "uname=" + uname;
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
 				"application/x-www-form-urlencoded;charset=UTF-8");
@@ -108,6 +108,14 @@ public class UserController {
 	public Response search(){
 		System.out.println("here");
 		return Response.ok(new Viewable("/jsp/search")).build();
+	}
+	
+
+	@GET
+	@Path("/SendMSG")
+	public Response sendmsg(){
+		return Response.ok(new Viewable("/jsp/SendMSG")).build();
+	
 	}
 	
 	@GET
@@ -165,7 +173,7 @@ public class UserController {
 	public String response(@FormParam("uname") String uname,
 			@FormParam("email") String email, @FormParam("password") String pass) {
  
-		String serviceUrl = "http://excellent-social-media.appspot.com/rest/RegistrationService";
+		String serviceUrl = "http://localhost:8888/rest/RegistrationService";
 		String urlParameters = "uname=" + uname + "&email=" + email
 				+ "&password=" + pass;
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
@@ -173,7 +181,7 @@ public class UserController {
 		JSONParser parser = new JSONParser();
 		Object obj;
 		try {
-			// System.out.println(retJson);
+			
 			obj = parser.parse(retJson);
 			JSONObject object = (JSONObject) obj;
 			if (object.get("Status").equals("OK"))
@@ -207,13 +215,12 @@ public class UserController {
 	@Produces("text/html")
 	public Response home(@FormParam("uname") String uname,
 			@FormParam("password") String pass) {
-		//uname=fady&password=123
+		
 		String urlParameters = "uname=" + uname + "&password=" + pass;
  
-		// hna el link kanet keda "http://f...content-available-to-author-only...t.com/rest/LoginService"
-		// ana 3'yrtaha b2a :D
+		
 		String retJson = Connection.connect(
-				"http://excellent-social-media.appspot.com/rest/LoginService", urlParameters,
+				"http://localhost:8888/rest/LoginService", urlParameters,
 				"POST", "application/x-www-form-urlencoded;charset=UTF-8");
  
 		JSONParser parser = new JSONParser();
@@ -274,39 +281,41 @@ public class UserController {
 		return "Failed";
 	}
 	
+
+	
+	
 	@POST
-	@Path("/accept")
+	@Path("/sendmymsg")
 	@Produces(MediaType.TEXT_PLAIN)
-	public String accept(@FormParam("email") String email,
-			@FormParam("femail") String femail) {
+	public String response_msg(@FormParam("senderemail") String senderN,
+			@FormParam("reciveremail") String ReciverN, @FormParam("msg") String msg) {
+ 
+		String serviceUrl = "http://localhost:8888/rest/sendmsgService";
+		String urlParameters = "senderemail="+senderN+"&reciveremail="+ ReciverN
+				+ "&msg=" + msg;
 		
-		String urlParameters = "email=" + email + "&femail=" + femail;
-		 
-		String retJson = Connection.connect(
-				"http://excellent-social-media.appspot.com/rest/acceptRequest", urlParameters,
-				"POST", "application/x-www-form-urlencoded;charset=UTF-8");
-		
+		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
+				"application/x-www-form-urlencoded;charset=UTF-8");
 		JSONParser parser = new JSONParser();
-		Object obj ;
-		
+		Object obj;
 		try {
 			
 			obj = parser.parse(retJson);
 			JSONObject object = (JSONObject) obj;
-			
-			if (object.get("Status").equals("OK")){
-				
-				return "Your Request Accepted Successfully";
-			}
+			if (object.get("Status").equals("OK"))
+				return "Your message sent Successfully";
+ 
+		} catch (ParseException e) {
+			e.printStackTrace();
 		}
-		catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();		
-		}
-	
+ 
+		/*
+		 * UserEntity user = new UserEntity(uname, email, pass);
+		 * user.saveUser(); return uname;
+		 */
 		return "Failed";
-	}
 	
+	}
 
  
 }

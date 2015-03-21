@@ -69,6 +69,18 @@ public class UserServices {
 		return object.toString();
 	}
 
+	@POST
+	@Path("/sendmsgService")
+	public String sendmsgService(@FormParam("senderemail") String senderE,
+			@FormParam("reciveremail") String ReciverE, @FormParam("msg") String msg) {
+		UserEntity user = new UserEntity("","","");
+		user.savemsg(senderE, ReciverE, msg);
+		JSONObject object = new JSONObject();
+		object.put("Status", "OK");
+		return object.toString();
+	}
+
+	
 	/**
 	 * Login Rest Service, this service will be called to make login process
 	 * also will check user data and returns new user from datastore
@@ -106,7 +118,7 @@ public class UserServices {
 	@Path("/SendrequestService")
 	public String SendrequestService(@FormParam("senderemail") String Semail,
 			@FormParam("reciveremail") String Remail) {
-		UserEntity user = new UserEntity( "fady" , "fady@" , "123" );
+		UserEntity user = new UserEntity( "" , "" , "" );
 		user.saverequest( Semail , Remail );
 		JSONObject object = new JSONObject();
 		object.put("Status", "OK");
@@ -120,7 +132,7 @@ public class UserServices {
 		
 		JSONObject object = new JSONObject();
 		
-		//System.out.println(email + " " + femail);
+		
 		if ( UserEntity.getrequest( email , femail ) ) {
 			
 			object.put("Status", "OK");

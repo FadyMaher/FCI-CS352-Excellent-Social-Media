@@ -12,7 +12,7 @@
 <a href="/social/acceptFriend" > Accept Friend </a><br>
 <a href="/social/SendFriendRequest" > Send Friend Request </a><br>
 <a href="/social/search" > Search For Friend </a><br>
-
+<a href="/social/SendMSG" > Send Message </a><br>
 <a href="/social/entryPoint" > Logout </a>
 </body>
 </html>

@@ -159,6 +159,34 @@ public class UserEntity {
 
 	}
 	
+
+	public Boolean savemsg(String SE,String RE,String Msg) {
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+		Transaction txn = datastore.beginTransaction();
+		Query gaeQuery = new Query("Messages");
+		PreparedQuery pq = datastore.prepare(gaeQuery);
+		List<Entity> list = pq.asList(FetchOptions.Builder.withDefaults());
+		
+		
+		try {
+		Entity MSG = new Entity("Messages", list.size() + 2);
+
+		MSG.setProperty("Sender Email", SE);
+		MSG.setProperty("Revicer Email", RE);
+		MSG.setProperty("Message", Msg);
+	 	
+		datastore.put(MSG);
+		txn.commit();
+		}finally{
+			if (txn.isActive()) {
+		        txn.rollback();
+		    }
+		}
+		return true;
+
+	}
+	
 	public Boolean saverequest( String senderEmail , String recieverEmail ) {
 		
 		DatastoreService datastore = DatastoreServiceFactory
