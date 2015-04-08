@@ -1,10 +1,13 @@
 package com.FCI.SWE.Controller;
 
+import java.util.ArrayList;
+
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.server.mvc.Viewable;
@@ -53,4 +56,41 @@ public class GroupController {
 
 		return null;
 	}
+
+	// ///////////////////////////////////////////////////////////////////
+	@GET
+	@Path("/SendGmsg")
+	public Response SendGmsg() {
+		return Response.ok(new Viewable("/jsp/SendGmsg")).build();
+
+	}
+
+	@POST
+	@Path("/sendmybigmsg")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String response_msg(
+			@FormParam("convName") String cName,
+			@FormParam("reciversemail") String ReciverN,
+			@FormParam("gmsg") String msg) {
+
+			String serviceUrl = "http://localhost:8888/rest/sendGroupmsgService";
+			String urlParameters = "convName=" + cName  +"&reciversemail=" + ReciverN + "&gmsg=" + msg;
+			String retJson = Connection.connect(serviceUrl, urlParameters,
+					"POST", "application/x-www-form-urlencoded;charset=UTF-8");
+			JSONParser parser = new JSONParser();
+			Object obj;
+			try {
+				obj = parser.parse(retJson);
+				JSONObject object = (JSONObject) obj;
+				if (object.get("Status").equals("OK"))
+					return "Your Group message sent Successfully";
+
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+       
+		return "Failed";
+
+	}
+
 }

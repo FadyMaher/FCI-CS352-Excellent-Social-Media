@@ -33,6 +33,8 @@ public class UserEntity {
 	private String email;
 	private String password;
 	private long id;
+	
+	
 
 	/**
 	 * Constructor accepts user data
@@ -49,12 +51,13 @@ public class UserEntity {
 		this.email = email;
 		this.password = password;
 	}
-	
-	private void setId(long id){
+
+	private void setId(long id) {
 		this.id = id;
 	}
+
 	
-	public long getId(){
+	public long getId() {
 		return id;
 	}
 
@@ -70,18 +73,6 @@ public class UserEntity {
 		return password;
 	}
 
-	
-	/**
-	 * 
-	 * This static method will form UserEntity class using user name and
-	 * password This method will serach for user in datastore
-	 * 
-	 * @param name
-	 *            user name
-	 * @param pass
-	 *            user password
-	 * @return Constructed user entity
-	 */
 
 	public static UserEntity getUser(String name, String pass) {
 		DatastoreService datastore = DatastoreServiceFactory
@@ -101,26 +92,26 @@ public class UserEntity {
 		}
 
 		return null;
-	}
-	
-	public static boolean getrequest( String email , String femail ) {
+	}	
+	public static boolean getrequest(String email, String femail) {
 
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 
 		Query gaeQuery = new Query("Requests");
 		PreparedQuery pq = datastore.prepare(gaeQuery);
-		
+
 		for (Entity entity : pq.asIterable()) {
 			
-			if ( entity.getProperty("ReciverEmail").toString().equals(email)
-				 && entity.getProperty("SenderEmail").toString().equals(femail) 
-				 && entity.getProperty("Status").toString().equals("false") ) {
-				
+			if (entity.getProperty("ReciverEmail").toString().equals(email)
+					&& entity.getProperty("SenderEmail").toString()
+							.equals(femail)
+					&& entity.getProperty("Status").toString().equals("false")) {
+
 				entity.setProperty("Status", "true");
 				datastore.put(entity);
-				
-				return true ;
+
+				return true;
 			}
 		}
 
@@ -140,92 +131,89 @@ public class UserEntity {
 		PreparedQuery pq = datastore.prepare(gaeQuery);
 		List<Entity> list = pq.asList(FetchOptions.Builder.withDefaults());
 		System.out.println("Size = " + list.size());
-		
-		try {
-		Entity employee = new Entity("users", list.size() + 2);
 
-		employee.setProperty("name", this.name);
-		employee.setProperty("email", this.email);
-		employee.setProperty("password", this.password);
-		
-		datastore.put(employee);
-		txn.commit();
-		}finally{
+		try {
+			Entity employee = new Entity("users", list.size() + 2);
+
+			employee.setProperty("name", this.name);
+			employee.setProperty("email", this.email);
+			employee.setProperty("password", this.password);
+
+			datastore.put(employee);
+			txn.commit();
+		} finally {
 			if (txn.isActive()) {
-		        txn.rollback();
-		    }
+				txn.rollback();
+			}
 		}
 		return true;
 
 	}
+
 	
 
-	public Boolean savemsg(String SE,String RE,String Msg) {
+	// /////////////////////////////////////////////////////////////////////
+
+	// Here i have an error on the the garpage column and int the first time of
+	// runnig the code
+	// the function in not work correctly
+
+	public Boolean saveGroupmsg(String CN, String SE, String RE, String Msg) {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		Transaction txn = datastore.beginTransaction();
-		Query gaeQuery = new Query("Messages");
+		Query gaeQuery = new Query("Conversation_Messages");
 		PreparedQuery pq = datastore.prepare(gaeQuery);
 		List<Entity> list = pq.asList(FetchOptions.Builder.withDefaults());
-		
-		
 		try {
-		Entity MSG = new Entity("Messages", list.size() + 2);
+			Entity MSG = new Entity("Conversation_Messages", list.size() + 1);
+			MSG.setProperty("ConversationName", CN);
+			MSG.setProperty("SenderEmail", SE);
+			MSG.setProperty("RevicerEmail", RE);
+			MSG.setProperty("Message", Msg);
 
-		MSG.setProperty("Sender Email", SE);
-		MSG.setProperty("Revicer Email", RE);
-		MSG.setProperty("Message", Msg);
-	 	
-		datastore.put(MSG);
-		txn.commit();
-		}finally{
+			datastore.put(MSG);
+			txn.commit();
+		} finally {
 			if (txn.isActive()) {
-		        txn.rollback();
-		    }
+				txn.rollback();
+			}
 		}
 		return true;
 
 	}
+
+	// /////////////////////////////////////////////////////////////////
+
 	
-	public Boolean saverequest( String senderEmail , String recieverEmail ) {
-		
+
+	public static Vector<UserEntity> searchUser(String uname) {
+
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
-		Query gaeQuery = new Query("Requests");
-		PreparedQuery pq = datastore.prepare(gaeQuery);
-		List<Entity> list = pq.asList(FetchOptions.Builder.withDefaults());
-
-		Entity employee = new Entity("Requests", list.size() + 1);
-		employee.setProperty("SenderEmail", senderEmail);
-		employee.setProperty("ReciverEmail", recieverEmail);
-		employee.setProperty("Status", "false");
-		datastore.put(employee);
-	
-		return true;
-	}
-	
-	public static Vector<UserEntity> searchUser( String uname ) {
-
-		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
 		Query gaeQuery = new Query("users");
 		PreparedQuery pq = datastore.prepare(gaeQuery);
-		 Vector<UserEntity> users = new  Vector<UserEntity> () ;
-		 
-		
+		Vector<UserEntity> users = new Vector<UserEntity>();
+
 		for (Entity entity : pq.asIterable()) {
-			
+
 			String Cname = entity.getProperty("name").toString();
-			if (Cname.contains(uname))
-			{
-			UserEntity user = new UserEntity(entity.getProperty("name").toString() , entity.getProperty("email").toString(), entity.getProperty("password").toString());
-			user.setId(entity.getKey().getId());
-			users.add(user);
+			if (Cname.contains(uname)) {
+				UserEntity user = new UserEntity(entity.getProperty("name")
+						.toString(), entity.getProperty("email").toString(),
+						entity.getProperty("password").toString());
+				user.setId(entity.getKey().getId());
+				users.add(user);
 			}
-			
-			}
-		
+
+		}
 
 		return users;
 	}
+	
+	
+	
+	
+	
 }

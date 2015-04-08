@@ -22,16 +22,7 @@ public class User {
 	
 	private static User currentActiveUser;
 
-	/**
-	 * Constructor accepts user data
-	 * 
-	 * @param name
-	 *            user name
-	 * @param email
-	 *            user email
-	 * @param password
-	 *            user provided password
-	 */
+	
 	private User(String name, String email, String password) {
 	
 		this.name = name;
@@ -106,7 +97,7 @@ public class User {
 		try {
 			JSONObject object = (JSONObject) parser.parse(json);
 			User user = new User();
-			user.setEmail(object.get("email").toString()) ;
+			user.setEmail(object.get("email").toString());
 			user.setName(object.get("name").toString()) ;
 			user.setId(Long.parseLong(object.get("id").toString()));
 			return user; 

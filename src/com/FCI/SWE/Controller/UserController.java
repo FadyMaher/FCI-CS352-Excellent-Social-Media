@@ -27,6 +27,8 @@ import javax.ws.rs.core.Response;
 
 
 
+
+
 import org.glassfish.jersey.server.mvc.Viewable;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -37,6 +39,10 @@ import org.json.simple.parser.ParseException;
 
 
 
+
+
+import com.FCI.SWE.Models.Message;
+import com.FCI.SWE.Models.Requests;
 import com.FCI.SWE.Models.User;
 import com.FCI.SWE.ServicesModels.UserEntity;
 import com.google.appengine.labs.repackaged.org.json.JSONException;
@@ -53,13 +59,172 @@ import com.google.appengine.labs.repackaged.org.json.JSONException;
 @Path("/")
 @Produces("text/html")
 public class UserController {
-	/**
-	 * Action function to render Signup page, this function will be executed
-	 * using url like this /rest/signup
-	 * 
-	 * @return sign up page
-	 * @throws JSONException 
+	
+	@GET
+	@Path("/Notification")
+	public Response Notification() {
+		return Response.ok(new Viewable("/jsp/Notification")).build();
+	}
+	
+	/*
+	 * Msg Notifiaction it's working till reach to the html page  (Show MN) 
+	 * then the error begain to appear the error in the final part of the code circle 
 	 */
+	@POST
+	@Path("/msgNotification")
+	public Response msgList(@FormParam("uemail") String uemail) {
+		
+		String serviceUrl = "http://localhost:8888/rest/mshNS";
+		String urlParameters = "uemail=" + uemail;
+		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
+				"application/x-www-form-urlencoded;charset=UTF-8");
+		
+		JSONParser parser = new JSONParser () ;
+		Map <String , Vector<Message>> passed_msgs = new HashMap <String,Vector<Message>> ();
+		try 
+		{
+			JSONArray arr = (JSONArray) parser.parse(retJson) ; 
+			Vector <Message> msgs = new Vector <Message>() ;
+			System.out.println(arr.size() + " Size");
+			for (int i=0 ; i<arr.size() ;i++)
+			{
+				JSONObject object ;
+				object = (JSONObject) arr.get(i) ;
+				msgs.add(Message.ParsemsgInfo(object.toJSONString()));
+			}
+			System.out.println( msgs.toString() );
+			passed_msgs.put("msgList", msgs) ;
+			return Response.ok(new Viewable("/jsp/showMN",passed_msgs )).build() ;
+		}
+		catch (ParseException e) {
+			System.out.println("Out of here");
+			e.printStackTrace();		
+		}
+		
+		return null;
+	}
+	
+	
+	
+	@POST
+	@Path("/RNotification")
+public Response reqList(@FormParam("uemail") String uemail) {
+		System.out.println("Fady");
+		String serviceUrl = "http://localhost:8888/rest/getRS";
+		String urlParameters = "uemail=" + uemail;
+		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
+				"application/x-www-form-urlencoded;charset=UTF-8");
+		
+		JSONParser parser = new JSONParser () ;
+		Map <String , Vector<Requests>> passed_reqs = new HashMap <String,Vector<Requests>> ();
+		try 
+		{
+			System.out.println("Fady 2");
+			JSONArray arr = (JSONArray) parser.parse(retJson) ; 
+			Vector <Requests> reqS = new Vector <Requests>() ;
+			System.out.println(arr.size() + " Size");
+			for (int i=0 ; i<arr.size() ;i++)
+			{
+				JSONObject object ;
+				object = (JSONObject) arr.get(i) ;
+				reqS.add(Requests.ParsereqInfo(object.toJSONString()));
+			}
+			System.out.println( reqS.toString() );
+			passed_reqs.put("reqList", reqS) ;
+			return Response.ok(new Viewable("/jsp/showRN",passed_reqs )).build() ;
+		}
+		catch (ParseException e) {
+			System.out.println("Out of here");
+			e.printStackTrace();		
+		}
+		
+		return null;
+	}
+	
+	
+	
+	
+	
+	
+	
+	//////////////////////////////////////////////////////////////
+	
+	@GET
+	@Path("/signup")
+	public Response signUp() {
+		return Response.ok(new Viewable("/jsp/register")).build();
+	}
+	
+	@GET
+	@Path("/SendFriendRequest")
+	public Response SFR() {
+		return Response.ok(new Viewable("/jsp/SendFriendRequest")).build();
+	}
+	
+	@GET
+	@Path("/search")
+	public Response search(){
+		return Response.ok(new Viewable("/jsp/search")).build();
+	}
+
+
+	@GET
+	@Path("/SendMSG")
+	public Response sendmsg(){
+		return Response.ok(new Viewable("/jsp/SendMSG")).build();
+	
+	}
+	
+	
+	@GET
+	@Path("/acceptFriend")
+	public Response accept(){
+		return Response.ok(new Viewable("/jsp/acceptFriend")).build();
+	}
+	
+	/**
+	 * Action function to render home page of application, home page contains
+	 * only signup and login buttons
+	 * 
+	 * @return enty point page (Home page of this application)
+	 */
+	@GET
+	@Path("/")
+	public Response index() {
+		return Response.ok(new Viewable("/jsp/entryPoint")).build();
+	}
+ 
+	/**
+	 * Action function to render login page this function will be executed using
+	 * url like this /rest/login
+	 * 
+	 * @return login page
+	 */
+	@GET
+	@Path("/login")
+	public Response login() {
+		return Response.ok(new Viewable("/jsp/login")).build();
+	}
+	@GET
+	@Path("/entryPoint")
+	public Response exit() {
+		User.setCurrentActiveUserToNull();
+		return Response.ok(new Viewable("/jsp/entryPoint")).build();
+	}
+	/**
+	 * Action function to response to signup request, This function will act as
+	 * a controller part and it will calls RegistrationService to make
+	 * registration
+	 * 
+	 * @param uname
+	 *            provided user name
+	 * @param email
+	 *            provided user email
+	 * @param pass
+	 *            provided user password
+	 * @return Status string
+	 */
+	
 	@POST
 	@Path("/doSearch")
 	public Response usersList(@FormParam("uname") String uname) {
@@ -91,82 +256,15 @@ public class UserController {
 		
 		return null;
 	}
-	@GET
-	@Path("/signup")
-	public Response signUp() {
-		return Response.ok(new Viewable("/jsp/register")).build();
-	}
 	
-	@GET
-	@Path("/SendFriendRequest")
-	public Response SFR() {
-		return Response.ok(new Viewable("/jsp/SendFriendRequest")).build();
-	}
 	
-	@GET
-	@Path("/search")
-	public Response search(){
-		System.out.println("here");
-		return Response.ok(new Viewable("/jsp/search")).build();
-	}
-	
-
-	@GET
-	@Path("/SendMSG")
-	public Response sendmsg(){
-		return Response.ok(new Viewable("/jsp/SendMSG")).build();
-	
-	}
-	
-	@GET
-	@Path("/acceptFriend")
-	public Response accept(){
-		return Response.ok(new Viewable("/jsp/acceptFriend")).build();
-	}
-	
-	/**
-	 * Action function to render home page of application, home page contains
-	 * only signup and login buttons
-	 * 
-	 * @return enty point page (Home page of this application)
-	 */
-	@GET
-	@Path("/")
-	public Response index() {
-		return Response.ok(new Viewable("/jsp/entryPoint")).build();
-	}
- 
-	/**
-	 * Action function to render login page this function will be executed using
-	 * url like this /rest/login
-	 * 
-	 * @return login page
-	 */
-	@GET
-	@Path("/login")
-	public Response login() {
 		
-		return Response.ok(new Viewable("/jsp/login")).build();
-	}
-	@GET
-	@Path("/entryPoint")
-	public Response exit() {
-		User.setCurrentActiveUserToNull();
-		return Response.ok(new Viewable("/jsp/entryPoint")).build();
-	}
-	/**
-	 * Action function to response to signup request, This function will act as
-	 * a controller part and it will calls RegistrationService to make
-	 * registration
-	 * 
-	 * @param uname
-	 *            provided user name
-	 * @param email
-	 *            provided user email
-	 * @param pass
-	 *            provided user password
-	 * @return Status string
-	 */
+	
+	
+	
+	
+	
+	
 	@POST
 	@Path("/response")
 	@Produces(MediaType.TEXT_PLAIN)
@@ -236,7 +334,7 @@ public class UserController {
 			map.put("email", user.getEmail());
 			return Response.ok(new Viewable("/jsp/home", map)).build();
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
  
@@ -287,12 +385,12 @@ public class UserController {
 	@POST
 	@Path("/sendmymsg")
 	@Produces(MediaType.TEXT_PLAIN)
-	public String response_msg(@FormParam("senderemail") String senderN,
-			@FormParam("reciveremail") String ReciverN, @FormParam("msg") String msg) {
+	public String response_msg(@FormParam("reciveremail") String ReciverN, 
+			@FormParam("msg") String msg) 
+	{
  
 		String serviceUrl = "http://localhost:8888/rest/sendmsgService";
-		String urlParameters = "senderemail="+senderN+"&reciveremail="+ ReciverN
-				+ "&msg=" + msg;
+		String urlParameters = "reciveremail=" + ReciverN + "&msg=" + msg;
 		
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
 				"application/x-www-form-urlencoded;charset=UTF-8");
@@ -309,10 +407,7 @@ public class UserController {
 			e.printStackTrace();
 		}
  
-		/*
-		 * UserEntity user = new UserEntity(uname, email, pass);
-		 * user.saveUser(); return uname;
-		 */
+		
 		return "Failed";
 	
 	}

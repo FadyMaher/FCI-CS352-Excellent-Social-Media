@@ -7,7 +7,6 @@
 </head>
 <body>
   <form action="/social/sendmymsg" method="post">
-  Enter Your Email <input type="text" name="senderemail" /> <br>
   Enter Your friend Email <input type="text" name="reciveremail" /> <br>
   Messages <input type="text" name="msg" /> <br>
   <input type="submit" value="Send">

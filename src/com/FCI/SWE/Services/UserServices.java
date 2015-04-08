@@ -27,6 +27,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import com.FCI.SWE.Models.User;
+import com.FCI.SWE.ServicesModels.MessageEntity;
+import com.FCI.SWE.ServicesModels.RequestEntity;
 import com.FCI.SWE.ServicesModels.UserEntity;
 
 
@@ -71,16 +74,36 @@ public class UserServices {
 
 	@POST
 	@Path("/sendmsgService")
-	public String sendmsgService(@FormParam("senderemail") String senderE,
-			@FormParam("reciveremail") String ReciverE, @FormParam("msg") String msg) {
-		UserEntity user = new UserEntity("","","");
-		user.savemsg(senderE, ReciverE, msg);
+	public String sendmsgService(@FormParam("reciveremail") String ReciverE, 
+			@FormParam("msg") String msg) {
+		MessageEntity msgg = new MessageEntity("", "", "");
+		User u=User.getCurrentActiveUser();
+		msgg.savemsg(u.getEmail(), ReciverE,msg);
 		JSONObject object = new JSONObject();
 		object.put("Status", "OK");
 		return object.toString();
 	}
 
 	
+	@POST
+	@Path("/acceptRequest")
+	public String accept(@FormParam("email") String email,
+			@FormParam("femail") String femail) {
+		
+		JSONObject object = new JSONObject();
+		
+		
+		if ( UserEntity.getrequest( email , femail ) ) {
+			
+			object.put("Status", "OK");
+		}
+		else {
+			object.put("Status", "Failed");
+		}
+		
+		return object.toString();
+	}
+
 	/**
 	 * Login Rest Service, this service will be called to make login process
 	 * also will check user data and returns new user from datastore
@@ -118,38 +141,20 @@ public class UserServices {
 	@Path("/SendrequestService")
 	public String SendrequestService(@FormParam("senderemail") String Semail,
 			@FormParam("reciveremail") String Remail) {
-		UserEntity user = new UserEntity( "" , "" , "" );
-		user.saverequest( Semail , Remail );
+		RequestEntity request = new RequestEntity( "" , "" , "" );
+		request.saverequest( Semail , Remail );
 		JSONObject object = new JSONObject();
 		object.put("Status", "OK");
 		return object.toString();
 	}
 
 	@POST
-	@Path("/acceptRequest")
-	public String accept(@FormParam("email") String email,
-			@FormParam("femail") String femail) {
-		
-		JSONObject object = new JSONObject();
-		
-		
-		if ( UserEntity.getrequest( email , femail ) ) {
-			
-			object.put("Status", "OK");
-		}
-		else {
-			object.put("Status", "Failed");
-		}
-		
-		return object.toString();
-	}
-	@POST
 	@Path("/SearchService")
 	
 	public String searchService(@FormParam("uname") String uname)
 	{
 
-		System.out.println("here");
+		System.out.println("here eeee");
 		Vector <UserEntity> users = UserEntity.searchUser(uname);
 		JSONArray result = new JSONArray();
 		for(UserEntity user : users)
@@ -160,8 +165,50 @@ public class UserServices {
 			jobject.put("email" , user.getEmail());
 			result.add(jobject);
 		}
-		System.out.println(result.toJSONString());
+		System.out.println(result.toJSONString()+"heyyy");
 		return result.toJSONString();
 		
 	}
+	
+	@POST
+	@Path("/mshNS")
+	public String MshNS(@FormParam("uemail") String uemail)
+	{
+
+		System.out.println("Feby & Fady");
+		Vector <MessageEntity> msgs = MessageEntity.searchmsg(uemail);
+		JSONArray result = new JSONArray();
+		for(MessageEntity msg : msgs)
+		{
+			JSONObject jobject = new JSONObject() ;
+			jobject.put("RevicerEmail" , msg.getSender());
+			jobject.put("SenderEmail" , msg.getReiver());
+			jobject.put("Message" , msg.getMessage());
+			result.add(jobject);
+		}
+		return result.toJSONString();
+		
+	}
+	
+	@POST
+	@Path("/getRS")
+	
+	public String GetRS(@FormParam("uemail") String uemail)
+	{
+
+		System.out.println("here eeee");
+		Vector <RequestEntity> reqS = RequestEntity.searchReq(uemail);
+		JSONArray result = new JSONArray();
+		for(RequestEntity req : reqS)
+		{
+			JSONObject jobject = new JSONObject() ;
+			jobject.put("ReciverEmail" , req.getSender());
+			jobject.put("SenderEmail" , req.getReiver());
+			jobject.put("Status" ,req.getStatus());
+			result.add(jobject);
+		}
+		return result.toJSONString();
+		
+	}
+	
 }

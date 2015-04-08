@@ -7,10 +7,9 @@
 <title>Insert title here</title>
 </head>
 <body>
-<c:forEach items="${it.usersList}" var="user"> 
-
-<p>User name:  <c:out value="${user.name}"> </c:out> </p>
-<p>emaillllllllllll  <c:out value="${user.email}"> </c:out> </p><br>
+<c:forEach items="${it.msgList}" var="msg"> 
+<p>reciever:   <c:out value="${msg.SenderEmail}"> </c:out> </p><br>
+<p>message:   <c:out value="${msg.Message}"> </c:out> </p><br>
 
 </c:forEach>
 </body>
