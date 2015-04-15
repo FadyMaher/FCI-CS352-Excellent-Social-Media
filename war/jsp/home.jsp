@@ -14,7 +14,7 @@
 <a href="/social/SendMSG" > Send Message </a><br>
 <a href="/social/SendGmsg" > Send Group Message </a><br>
 <a href="/social/Notification" >Notification </a><br>
-
+<a href="/social/createPost" >Create Post</a><br>
 <a href="/social/entryPoint" > Logout </a><br>
 
 
