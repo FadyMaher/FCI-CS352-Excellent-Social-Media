@@ -1,26 +1,13 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-   "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page language="java" contentType="text/html; charset=windows-1256"
+	pageEncoding="windows-1256"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
 <html>
-<head>
-</head>
+<head>All Notifications</head>
 <body>
-<form action="/social/msgNotification" method="post">
-	
-	Enter your E-mail <input type="text" name="uemail" /> <br>
-  	<input type="submit" value="Message Notification">
-  
-</form>
-
-
-<form action="/social/RNotification" method="post">
-	
-	Enter your E-mail <input type="text" name="uemail" /> <br>
-  	<input type="submit" value="Request Notification">
-  
-</form>
-
-
-
-<br>	
+<c:forEach items="${it.result}" var="notification">
+<p>Time is <c:out value="${notification.timestamp}"></c:out></p>
+</c:forEach>
 </body>
 </html>
