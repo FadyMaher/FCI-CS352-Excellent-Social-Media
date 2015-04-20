@@ -152,7 +152,7 @@ public class UserController {
 	@Path("/search")
 	public Response search() {
 		return Response.ok(new Viewable("/jsp/search")).build();
-                System.out.println("Here");
+                
 	}
 	@GET
 	@Path("/createPost")
