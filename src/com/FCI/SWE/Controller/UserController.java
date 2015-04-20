@@ -162,6 +162,13 @@ public class UserController {
 	}
 	
 	@GET
+	@Path("/postPri")
+	public Response postPri(){
+		return Response.ok(new Viewable("/jsp/postPri")).build();
+	}
+	
+	
+	@GET
 	@Path("/SendMSG")
 	public Response sendmsg() {
 		return Response.ok(new Viewable("/jsp/SendMSG")).build();
