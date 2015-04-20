@@ -31,6 +31,7 @@ import com.FCI.SWE.Models.User;
 import com.FCI.SWE.ServicesModels.MessageEntity;
 import com.FCI.SWE.ServicesModels.RequestEntity;
 import com.FCI.SWE.ServicesModels.UserEntity;
+import com.FCI.SWE.Models.Post;
 
 
 /**
@@ -71,7 +72,16 @@ public class UserServices {
 		object.put("Status", "OK");
 		return object.toString();
 	}
-
+	@POST
+	@Path("/createPostService")
+	public String createPostService(@FormParam("userPost") String uPost){
+		Post p = new Post("","","");
+		User u = User.getCurrentActiveUser();
+		p.savePost(u.getEmail(), uPost, "public");
+		JSONObject object = new JSONObject();
+		object.put("Status", "OK");
+		return object.toJSONString();
+	}
 	@POST
 	@Path("/sendmsgService")
 	public String sendmsgService(@FormParam("reciveremail") String ReciverE, 
@@ -83,7 +93,34 @@ public class UserServices {
 		object.put("Status", "OK");
 		return object.toString();
 	}
-
+	@POST
+	@Path("/pagePostService")
+	public String pagePostService(@FormParam("Post") String Post, 
+			@FormParam("Page") String Page) {
+		UserEntity user = new UserEntity("", "", "");
+		User u=User.getCurrentActiveUser();
+		user.savePagePost(u.getEmail(), Post , Page);
+		JSONObject object = new JSONObject();
+		object.put("Status", "OK");
+		return object.toString();
+	}
+	
+	@POST
+	@Path("/userPostService")
+	public String userPostService(@FormParam("Post") String Post, 
+			@FormParam("Felling") String Felling) {
+		UserEntity user = new UserEntity("", "", "");
+		User u=User.getCurrentActiveUser();
+		user.saveUserPost(u.getEmail(), Post , Felling);
+		JSONObject object = new JSONObject();
+		object.put("Status", "OK");
+		return object.toString();
+	}
+	
+	
+	
+	
+	
 	
 	@POST
 	@Path("/acceptRequest")

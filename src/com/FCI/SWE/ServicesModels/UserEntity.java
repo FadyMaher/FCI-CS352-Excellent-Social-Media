@@ -212,7 +212,54 @@ public class UserEntity {
 		return users;
 	}
 	
+	public Boolean savePagePost(String Writer, String Post, String Page) {
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+		Transaction txn = datastore.beginTransaction();
+		Query gaeQuery = new Query("Pages Posts");
+		PreparedQuery pq = datastore.prepare(gaeQuery);
+		List<Entity> list = pq.asList(FetchOptions.Builder.withDefaults());
+
+		try {
+			Entity PP = new Entity("Pages Posts", list.size() + 1);
+			PP.setProperty("Writer",Writer );
+			PP.setProperty("Post", Post);
+			PP.setProperty("Page", Page);
+			PP.setProperty("NumberOfSeen", " ");
+			datastore.put(PP);
+			txn.commit();
+		} finally {
+			if (txn.isActive()) {
+				txn.rollback();
+			}
+		}
+		return true;
+
+	}
 	
+	public Boolean saveUserPost(String Writer, String Post, String Felling) {
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+		Transaction txn = datastore.beginTransaction();
+		Query gaeQuery = new Query("Users Posts");
+		PreparedQuery pq = datastore.prepare(gaeQuery);
+		List<Entity> list = pq.asList(FetchOptions.Builder.withDefaults());
+
+		try {
+			Entity PP = new Entity("Users Posts", list.size() + 1);
+			PP.setProperty("User",Writer);
+			PP.setProperty("Post", Post);
+			PP.setProperty("Felling", Felling);
+			datastore.put(PP);
+			txn.commit();
+		} finally {
+			if (txn.isActive()) {
+				txn.rollback();
+			}
+		}
+		return true;
+
+	}
 	
 	
 	
