@@ -129,7 +129,11 @@ public class UserController {
 	public Response signUp() {
 		return Response.ok(new Viewable("/jsp/register")).build();
 	}
-	
+	@GET
+	@Path("/PostPri")
+	public Response PostPri() {
+		return Response.ok(new Viewable("/jsp/PostPri")).build();
+	}
 	@GET
 	@Path("/pagePost")
 	public Response pagePost() {
