@@ -249,7 +249,9 @@ public class UserEntity {
 			Entity PP = new Entity("Users Posts", list.size() + 1);
 			PP.setProperty("User",Writer);
 			PP.setProperty("Post", Post);
+			
 			PP.setProperty("Felling", Felling);
+		
 			datastore.put(PP);
 			txn.commit();
 		} finally {
