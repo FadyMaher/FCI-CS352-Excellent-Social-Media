@@ -47,6 +47,13 @@ import com.FCI.SWE.Models.Post;
 @Path("/")
 @Produces(MediaType.TEXT_PLAIN)
 public class UserServices {
+	
+	@POST
+	@Path("/timeline")
+	public String timeline( @FormParam("uname") String uname ) {
+		
+		return PostEntity.getAllPosts ( uname ) ;
+	}
 
 	/**
 	 * Registration Rest service, this service will be called to make
@@ -76,7 +83,7 @@ public class UserServices {
 	public String createPostService(@FormParam("userPost") String uPost){
 		Post p = new Post("","","");
 		User u = User.getCurrentActiveUser();
-		p.savePost(u.getEmail(), uPost, "public");
+		PostEntity.savePost(u.getEmail(), uPost, "public");
 		JSONObject object = new JSONObject();
 		object.put("Status", "OK");
 		return object.toJSONString();
@@ -154,6 +161,7 @@ public class UserServices {
 		object.put("Status", "OK");
 		return object.toString();		
 	}
+	
 	
 	/**
 	 * Login Rest Service, this service will be called to make login process
@@ -237,7 +245,6 @@ public class UserServices {
 		return result.toJSONString();
 
 	}
-
 	@POST
 	@Path("/getRS")
 	public String GetRS(@FormParam("uemail") String uemail) {

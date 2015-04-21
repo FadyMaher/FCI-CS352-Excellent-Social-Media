@@ -34,7 +34,7 @@ public class NotificationController {
 	public Response getAllNotification() {
 		User user = User.getCurrentActiveUser();
 		String urlParams = "user="+user.getName();
-		String retJson = Connection.connect("http://localhost:8888/rest/getNotification",
+		String retJson = Connection.connect("http://excellent-social-media.appspot.com/rest/getNotification",
 				urlParams, "POST", "application/x-www-form-urlencoded");
 		
 		JSONParser parser = new JSONParser();

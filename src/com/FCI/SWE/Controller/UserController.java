@@ -60,7 +60,7 @@ public class UserController {
 	@Path("/msgNotification")
 	public Response msgList(@FormParam("uemail") String uemail) {
 
-		String serviceUrl = "http://localhost:8888/rest/mshNS";
+		String serviceUrl = "http://excellent-social-media.appspot.com/rest/mshNS";
 		String urlParameters = "uemail=" + uemail;
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
 				"application/x-www-form-urlencoded;charset=UTF-8");
@@ -92,7 +92,7 @@ public class UserController {
 	@Path("/RNotification")
 	public Response reqList(@FormParam("uemail") String uemail) {
 		System.out.println("Fady");
-		String serviceUrl = "http://localhost:8888/rest/getRS";
+		String serviceUrl = "http://excellent-social-media.appspot.com/rest/getRS";
 		String urlParameters = "uemail=" + uemail;
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
 				"application/x-www-form-urlencoded;charset=UTF-8");
@@ -129,11 +129,7 @@ public class UserController {
 		return Response.ok(new Viewable("/jsp/register")).build();
 	}
 
-	@GET
-	@Path("/PostPri")
-	public Response PostPri() {
-		return Response.ok(new Viewable("/jsp/PostPri")).build();
-	}
+	
 	@GET
 	@Path("/pagePost")
 	public Response pagePost() {
@@ -167,12 +163,11 @@ public class UserController {
 	}
 	
 	@GET
-	@Path("/postPri")
-	public Response postPri(){
-		return Response.ok(new Viewable("/jsp/postPri")).build();
+	@Path("/ChangePostPrivacy")
+	public Response ChangePostPrivacy(){
+		return Response.ok(new Viewable("/jsp/ChangePostPrivacy")).build();
 	}
 	
-
 	@GET
 	@Path("/SendMSG")
 	public Response sendmsg() {
@@ -232,11 +227,43 @@ public class UserController {
 	 * @return Status string
 	 */
 
+	
+	@POST
+	@Path("/changePri")
+	public Response changePri(@FormParam("pID") String pID ,@FormParam("pPR") String pPR) {
+		String serviceUrl = "http://excellent-social-media.appspot.com/rest/chPService";
+		
+		String urlParameters = "pID=" + pID + "&pPR=" + pPR;
+		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
+				"application/x-www-form-urlencoded;charset=UTF-8");
+		JSONParser parser = new JSONParser();
+		Map<String, Vector<User>> passed_users = new HashMap<String, Vector<User>>();
+		try {
+			JSONArray arr = (JSONArray) parser.parse(retJson);
+			Vector<User> users = new Vector<User>();
+			for (int i = 0; i < arr.size(); i++) {
+				JSONObject object;
+				object = (JSONObject) arr.get(i);
+				users.add(User.ParseUserInfo(object.toJSONString()));
+			}
+			passed_users.put("usersList", users);
+			return Response.ok(new Viewable("/jsp/showUsers", passed_users))
+					.build();
+		} catch (ParseException e) {
+			System.out.println("Out of here");
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	
+	
 	@POST
 	@Path("/doSearch")
 	public Response usersList(@FormParam("uname") String uname) {
 		System.out.println(uname);
-		String serviceUrl = "http://localhost:8888/rest/SearchService";
+		String serviceUrl = "http://excellent-social-media.appspot.com/rest/SearchService";
 		String urlParameters = "uname=" + uname;
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
 				"application/x-www-form-urlencoded;charset=UTF-8");
@@ -282,7 +309,7 @@ public class UserController {
 		String urlParameters = "uname=" + uname + "&password=" + pass;
 
 		String retJson = Connection.connect(
-				"http://localhost:8888/rest/LoginService", urlParameters,
+				"http://excellent-social-media.appspot.com/rest/LoginService", urlParameters,
 				"POST", "application/x-www-form-urlencoded;charset=UTF-8");
 
 		JSONParser parser = new JSONParser();
@@ -316,7 +343,7 @@ public class UserController {
 	public String response(@FormParam("uname") String uname,
 			@FormParam("email") String email, @FormParam("password") String pass) {
 
-		String serviceUrl = "http://localhost:8888/rest/RegistrationService";
+		String serviceUrl = "http://excellent-social-media.appspot.com/rest/RegistrationService";
 		String urlParameters = "uname=" + uname + "&email=" + email
 				+ "&password=" + pass;
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
@@ -353,7 +380,7 @@ public class UserController {
 				+ Remail;
 
 		String retJson = Connection.connect(
-				"http://localhost:8888/rest/SendrequestService", urlParameters,
+				"http://excellent-social-media.appspot.com/rest/SendrequestService", urlParameters,
 				"POST", "application/x-www-form-urlencoded;charset=UTF-8");
 
 		JSONParser parser = new JSONParser();
@@ -384,7 +411,7 @@ public class UserController {
 	public String response_post(@FormParam("postPrivacy") String postPrivacy,
 			@FormParam("postContent") String postContent) {
 		System.out.println("UP="+postPrivacy);
-		String serviceUrl = "http://localhost:8888/rest/createPostService";
+		String serviceUrl = "http://excellent-social-media.appspot.com/rest/createPostService";
 		String urlParameters = "postPrivacy=" + postPrivacy +"postContent=" + postContent;
 
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
@@ -413,7 +440,7 @@ public class UserController {
 	public String response_msg(@FormParam("reciveremail") String ReciverN,
 			@FormParam("msg") String msg) {
 
-		String serviceUrl = "http://localhost:8888/rest/sendmsgService";
+		String serviceUrl = "http://excellent-social-media.appspot.com/rest/sendmsgService";
 		String urlParameters = "reciveremail=" + ReciverN + "&msg=" + msg;
 
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
@@ -446,7 +473,7 @@ public class UserController {
 	public String response_pagePost(@FormParam("Post") String Post,
 			@FormParam("Page") String Page) {
 
-		String serviceUrl = "http://localhost:8888/rest/pagePostService";
+		String serviceUrl = "http://excellent-social-media.appspot.com/rest/pagePostService";
 		String urlParameters = "Post=" + Post + "&Page=" + Page;
 
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
@@ -475,7 +502,7 @@ public class UserController {
 	public String response_userPost(@FormParam("Post") String Post,
 			@FormParam("Felling") String Felling) {
 
-		String serviceUrl = "http://localhost:8888/rest/userPostService";
+		String serviceUrl = "http://excellent-social-media.appspot.com/rest/userPostService";
 		String urlParameters = "Post=" + Post + "&Felling=" + Felling;
 
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
