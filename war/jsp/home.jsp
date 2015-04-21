@@ -18,7 +18,5 @@
 <a href="/social/pagePost" > Create Page Post </a><br>
 <a href="/social/userPost" > Create User Post </a><br>
 <a href="/social/entryPoint" > Logout </a><br>
-
-
 </body>
 </html>

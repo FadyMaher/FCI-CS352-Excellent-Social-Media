@@ -46,8 +46,7 @@ import com.google.appengine.labs.repackaged.org.json.JSONException;
 @Path("/")
 @Produces("text/html")
 public class UserController {
-
-	@GET
+@GET
 	@Path("/Notification")
 	public Response Notification() {
 		return Response.ok(new Viewable("/jsp/Notification")).build();
@@ -129,6 +128,7 @@ public class UserController {
 	public Response signUp() {
 		return Response.ok(new Viewable("/jsp/register")).build();
 	}
+
 	@GET
 	@Path("/PostPri")
 	public Response PostPri() {
@@ -139,7 +139,7 @@ public class UserController {
 	public Response pagePost() {
 		return Response.ok(new Viewable("/jsp/pagePost")).build();
 	}
-	
+
 	@GET
 	@Path("/userPost")
 	public Response userPost() {
@@ -158,6 +158,7 @@ public class UserController {
 		return Response.ok(new Viewable("/jsp/search")).build();
                 
 	}
+
 	@GET
 	@Path("/createPost")
 	public Response creatPost(){
@@ -171,13 +172,14 @@ public class UserController {
 		return Response.ok(new Viewable("/jsp/postPri")).build();
 	}
 	
-	
+
 	@GET
 	@Path("/SendMSG")
 	public Response sendmsg() {
 		return Response.ok(new Viewable("/jsp/SendMSG")).build();
-
 	}
+
+	
 
 	@GET
 	@Path("/acceptFriend")
@@ -377,22 +379,31 @@ public class UserController {
 	@POST
 	@Path("/createpost")
 	@Produces(MediaType.TEXT_PLAIN)
-	public String response_post(@FormParam("userPost") String uPost) {
+
+	
+	public String response_post(@FormParam("postPrivacy") String postPrivacy,
+			@FormParam("postContent") String postContent) {
+		System.out.println("UP="+postPrivacy);
 		String serviceUrl = "http://localhost:8888/rest/createPostService";
-		String urlParameters = "userPost=" + uPost;
+		String urlParameters = "postPrivacy=" + postPrivacy +"postContent=" + postContent;
+
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
 				"application/x-www-form-urlencoded;charset=UTF-8");
 		JSONParser parser = new JSONParser();
-		Object obj;
+		Object obj = null;
 		try {
 			obj = parser.parse(retJson);
+
 			JSONObject object =(JSONObject) obj;
 			if(object.get("Status").equals("OK"))
 				return "Your post saved successfully";
 		}
 		catch (ParseException e) {
-			e.printStackTrace();
-		}
+
+			JSONObject object = (JSONObject) obj;
+			if (object.get("Status").equals("OK"))
+				return "Your post saved successfully";
+		} 
 		return "Failed";
 	}
 
@@ -423,6 +434,10 @@ public class UserController {
 		return "Failed";
 
 	}
+	
+	
+	
+
 
 
 	@POST
@@ -481,15 +496,5 @@ public class UserController {
 		return "Failed";
 
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+		
 }

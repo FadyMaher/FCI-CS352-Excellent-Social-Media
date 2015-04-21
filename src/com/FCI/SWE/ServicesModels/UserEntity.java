@@ -51,6 +51,9 @@ public class UserEntity {
 		this.email = email;
 		this.password = password;
 	}
+	public UserEntity() {
+		
+	}
 
 	private void setId(long id) {
 		this.id = id;
@@ -211,6 +214,17 @@ public class UserEntity {
 
 		return users;
 	}
+	public Vector<String> getAllUsers(){
+		Vector<String> usersNames=new Vector<String>();
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+		Query gaeQuery = new Query("users");
+		PreparedQuery pq = datastore.prepare(gaeQuery);
+		for (Entity entity : pq.asIterable()) {
+			usersNames.add(entity.getProperty("name").toString());
+		}
+		return usersNames;
+	}
 	
 	public Boolean savePagePost(String Writer, String Post, String Page) {
 		DatastoreService datastore = DatastoreServiceFactory
@@ -263,6 +277,25 @@ public class UserEntity {
 
 	}
 	
+
+	public static UserEntity searchSingleUser(String uname) {
+		DatastoreService dataStore = DatastoreServiceFactory
+				.getDatastoreService();
+		Query gae = new Query("users");
+		PreparedQuery preparedQuery = dataStore.prepare(gae);
+		for (Entity entity : preparedQuery.asIterable()) {
+			entity.getKey().getId();
+			String currentName = entity.getProperty("name").toString();
+			if (currentName.contains(uname)) {
+				UserEntity returnedUser = new UserEntity(entity.getProperty("name").toString(),
+						entity.getProperty("email").toString(), entity
+								.getProperty("password").toString());
+				returnedUser.setId(entity.getKey().getId());
+			return returnedUser;
+			}
+		}
+		return null;
+	}
 	
 	
 }

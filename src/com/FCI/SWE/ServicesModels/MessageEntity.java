@@ -71,7 +71,6 @@ public class MessageEntity {
 		Query gaeQuery = new Query("Messages");
 		PreparedQuery pq = datastore.prepare(gaeQuery);
 		Vector<MessageEntity> msgs = new Vector<MessageEntity>();
-
 		for (Entity entity : pq.asIterable()) {
 
 			String Cemail = entity.getProperty("RevicerEmail").toString();
@@ -88,6 +87,7 @@ public class MessageEntity {
 						entity.getProperty("Message").toString());
 				
 				msgs.add(msg);
+				
 			}
 
 		}
