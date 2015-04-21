@@ -34,7 +34,6 @@ import com.FCI.SWE.ServicesModels.RequestEntity;
 import com.FCI.SWE.ServicesModels.UserEntity;
 import com.FCI.SWE.Models.Post;
 
-
 /**
  * This class contains REST services, also contains action function for web
  * application
@@ -71,17 +70,20 @@ public class UserServices {
 		return object.toString();
 	}
 
-	@POST
-	@Path("/createPostService")
-	public String createPostService(@FormParam("userPost") String uPost){
-		Post p = new Post("","","");
-		User u = User.getCurrentActiveUser();
-		p.savePost(u.getEmail(), uPost, "public");
-		JSONObject object = new JSONObject();
-		object.put("Status", "OK");
-		return object.toJSONString();
-	}
-
+	/*
+	 * @POST
+	 * 
+	 * @Path("/createPostService") public String
+	 * createPostService(@FormParam("userPost") String uPost,
+	 * 
+	 * @FormParam("userPrivacy") String uPrivacy) {
+	 * 
+	 * 
+	 * Post p = new Post("", "", ""); User u = User.getCurrentActiveUser();
+	 * PostEntity pe = new PostEntity(); pe.savePost(u.getEmail(), uPost,
+	 * "public"); JSONObject object = new JSONObject(); object.put("Status",
+	 * "OK"); return object.toJSONString(); }
+	 */
 
 	@POST
 	@Path("/sendmsgService")
@@ -94,36 +96,6 @@ public class UserServices {
 		object.put("Status", "OK");
 		return object.toString();
 	}
-
-	@POST
-	@Path("/pagePostService")
-	public String pagePostService(@FormParam("Post") String Post, 
-			@FormParam("Page") String Page) {
-		UserEntity user = new UserEntity("", "", "");
-		User u=User.getCurrentActiveUser();
-		user.savePagePost(u.getEmail(), Post , Page);
-		JSONObject object = new JSONObject();
-		object.put("Status", "OK");
-		return object.toString();
-	}
-	
-	@POST
-	@Path("/userPostService")
-	public String userPostService(@FormParam("Post") String Post, 
-			@FormParam("Felling") String Felling) {
-		UserEntity user = new UserEntity("", "", "");
-		User u=User.getCurrentActiveUser();
-		user.saveUserPost(u.getEmail(), Post , Felling);
-		JSONObject object = new JSONObject();
-		object.put("Status", "OK");
-		return object.toString();
-	}
-	
-	
-	
-	
-	
-	
 
 	@POST
 	@Path("/acceptRequest")
@@ -141,20 +113,53 @@ public class UserServices {
 
 		return object.toString();
 	}
-	
+
 	@POST
 	@Path("/createPostService")
-	public String createPost(@FormParam("postPrivacy") String postPrivacy,
-			@FormParam("postContent") String postContent) {
-		System.out.println("HAPPY");
+	public String createPost(@FormParam("postContent") String postContent,
+			@FormParam("postPrivacy") String postPrivacy,
+			@FormParam("feeling") String postFeeling,
+			@FormParam("pageName") String pageName,
+			@FormParam("customNames") String customNames) {
 		PostEntity post = new PostEntity();
+		post.setPostContent(postContent);
+		post.setFeeling(postFeeling);
+		int pID = post.getPageID();
+		pID++;
+		post.setPostID(pID);
 		User u = User.getCurrentActiveUser();
-		post.saveForPublic(u.getEmail(), postContent);
+		
+		switch (postPrivacy) {
+		case "public":
+			post.setPostPrivacy("public");
+			post.setNumberOfLikes(0);
+			post.setPageID(-1);
+			post.setPostOwner(u.getEmail());
+			post.saveForPublic(postPrivacy,postContent,postFeeling);
+			break;
+		case "page":
+			post.setPostPrivacy("@"+pageName);
+			post.setNumberOfLikes(0);
+			post.setPageID(-1);
+			post.setPostOwner(u.getEmail());
+			post.saveForPage(post.getPrivacy());
+			break;
+		case "custom":
+			post.setPostPrivacy("!"+customNames);
+			post.setNumberOfLikes(0);
+			post.setPageID(-1);
+			post.setPostOwner(u.getEmail());
+			post.saveForPage(post.getPrivacy());
+			break;
+		default:
+			break;
+		}
+
 		JSONObject object = new JSONObject();
 		object.put("Status", "OK");
-		return object.toString();		
+		return object.toString();
 	}
-	
+
 	/**
 	 * Login Rest Service, this service will be called to make login process
 	 * also will check user data and returns new user from datastore

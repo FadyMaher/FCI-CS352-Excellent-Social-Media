@@ -46,7 +46,15 @@ import com.google.appengine.labs.repackaged.org.json.JSONException;
 @Path("/")
 @Produces("text/html")
 public class UserController {
-@GET
+
+	/*
+	 * @GET
+	 * 
+	 * @Path("/sharePost") public Response sharePost() { return Response.ok(new
+	 * Viewable("/jsp/SharePost")).build(); }
+	 */
+
+	@GET
 	@Path("/Notification")
 	public Response Notification() {
 		return Response.ok(new Viewable("/jsp/Notification")).build();
@@ -130,23 +138,6 @@ public class UserController {
 	}
 
 	@GET
-	@Path("/PostPri")
-	public Response PostPri() {
-		return Response.ok(new Viewable("/jsp/PostPri")).build();
-	}
-	@GET
-	@Path("/pagePost")
-	public Response pagePost() {
-		return Response.ok(new Viewable("/jsp/pagePost")).build();
-	}
-
-	@GET
-	@Path("/userPost")
-	public Response userPost() {
-		return Response.ok(new Viewable("/jsp/userPost")).build();
-	}
-
-	@GET
 	@Path("/SendFriendRequest")
 	public Response SFR() {
 		return Response.ok(new Viewable("/jsp/SendFriendRequest")).build();
@@ -156,30 +147,20 @@ public class UserController {
 	@Path("/search")
 	public Response search() {
 		return Response.ok(new Viewable("/jsp/search")).build();
-                
 	}
 
 	@GET
 	@Path("/createPost")
-	public Response creatPost(){
-		System.out.println("michael");
+	public Response creatPost() {
 		return Response.ok(new Viewable("/jsp/CreatePost")).build();
 	}
-	
-	@GET
-	@Path("/postPri")
-	public Response postPri(){
-		return Response.ok(new Viewable("/jsp/postPri")).build();
-	}
-	
 
 	@GET
 	@Path("/SendMSG")
 	public Response sendmsg() {
 		return Response.ok(new Viewable("/jsp/SendMSG")).build();
-	}
 
-	
+	}
 
 	@GET
 	@Path("/acceptFriend")
@@ -349,7 +330,7 @@ public class UserController {
 			@FormParam("senderemail") String Semail,
 			@FormParam("reciveremail") String Remail) {
 
-		String urlParameters = "senderemail=" + Semail + "&reciveremail="
+		String urlParameters = "senderemail=" + Semail + "reciveremail="
 				+ Remail;
 
 		String retJson = Connection.connect(
@@ -379,31 +360,27 @@ public class UserController {
 	@POST
 	@Path("/createpost")
 	@Produces(MediaType.TEXT_PLAIN)
-
-	
-	public String response_post(@FormParam("postPrivacy") String postPrivacy,
-			@FormParam("postContent") String postContent) {
-		System.out.println("UP="+postPrivacy);
+	public String response_post(@FormParam("postContent") String postContent,
+			@FormParam("postPrivacy") String postPrivacy,
+			@FormParam("feeling") String postFeeling,
+			@FormParam("pageName") String pageName,
+			@FormParam("customNames") String customNames) {
 		String serviceUrl = "http://localhost:8888/rest/createPostService";
-		String urlParameters = "postPrivacy=" + postPrivacy +"postContent=" + postContent;
-
+		String urlParameters = "postPrivacy=" + postPrivacy + "&postContent="
+				+ postContent + "&feeling=" + postFeeling + "&pageName="
+				+ pageName + "&cutomNames" + customNames;
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
 				"application/x-www-form-urlencoded;charset=UTF-8");
 		JSONParser parser = new JSONParser();
-		Object obj = null;
+		Object obj;
 		try {
 			obj = parser.parse(retJson);
-
-			JSONObject object =(JSONObject) obj;
-			if(object.get("Status").equals("OK"))
-				return "Your post saved successfully";
-		}
-		catch (ParseException e) {
-
 			JSONObject object = (JSONObject) obj;
 			if (object.get("Status").equals("OK"))
 				return "Your post saved successfully";
-		} 
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		return "Failed";
 	}
 
@@ -434,67 +411,5 @@ public class UserController {
 		return "Failed";
 
 	}
-	
-	
-	
 
-
-
-	@POST
-	@Path("/createPagepost")
-	@Produces(MediaType.TEXT_PLAIN)
-	public String response_pagePost(@FormParam("Post") String Post,
-			@FormParam("Page") String Page) {
-
-		String serviceUrl = "http://localhost:8888/rest/pagePostService";
-		String urlParameters = "Post=" + Post + "&Page=" + Page;
-
-		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
-				"application/x-www-form-urlencoded;charset=UTF-8");
-		JSONParser parser = new JSONParser();
-		Object obj;
-		try {
-
-			obj = parser.parse(retJson);
-			JSONObject object = (JSONObject) obj;
-			if (object.get("Status").equals("OK"))
-				return "Your Post Posted Successfully";
-
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-
-		return "Failed";
-
-	}
-
-	
-	@POST
-	@Path("/createUserpost")
-	@Produces(MediaType.TEXT_PLAIN)
-	public String response_userPost(@FormParam("Post") String Post,
-			@FormParam("Felling") String Felling) {
-
-		String serviceUrl = "http://localhost:8888/rest/userPostService";
-		String urlParameters = "Post=" + Post + "&Felling=" + Felling;
-
-		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
-				"application/x-www-form-urlencoded;charset=UTF-8");
-		JSONParser parser = new JSONParser();
-		Object obj;
-		try {
-
-			obj = parser.parse(retJson);
-			JSONObject object = (JSONObject) obj;
-			if (object.get("Status").equals("OK"))
-				return "Your Post Posted Successfully";
-
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-
-		return "Failed";
-
-	}
-		
 }
