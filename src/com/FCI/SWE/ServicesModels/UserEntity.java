@@ -51,6 +51,9 @@ public class UserEntity {
 		this.email = email;
 		this.password = password;
 	}
+	public UserEntity() {
+		
+	}
 
 	private void setId(long id) {
 		this.id = id;
@@ -210,6 +213,17 @@ public class UserEntity {
 		}
 
 		return users;
+	}
+	public Vector<String> getAllUsers(){
+		Vector<String> usersNames=new Vector<String>();
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+		Query gaeQuery = new Query("users");
+		PreparedQuery pq = datastore.prepare(gaeQuery);
+		for (Entity entity : pq.asIterable()) {
+			usersNames.add(entity.getProperty("name").toString());
+		}
+		return usersNames;
 	}
 	
 	

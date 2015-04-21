@@ -16,6 +16,7 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Transaction;
 
 public class Post {
+	private Long postID;
 	private String postOwner;
 	private String privacy;
 	private String postContent;
@@ -27,6 +28,10 @@ public class Post {
 	}
 
 	public Post() {
+	}
+
+	public Long getPostID() {
+		return postID;
 	}
 
 	public String getPostOwner() {
@@ -41,6 +46,10 @@ public class Post {
 		return privacy;
 	}
 
+	public void setPostID(Long postD) {
+		postID = postD;
+	}
+
 	public void setPostOwner(String postO) {
 		postOwner = postO;
 	}
@@ -52,8 +61,9 @@ public class Post {
 	public void setPostPrivacy(String postP) {
 		privacy = postP;
 	}
-	public static Post parsePost(String json){
-		JSONParser parser  = new JSONParser();
+
+	public static Post parsePost(String json) {
+		JSONParser parser = new JSONParser();
 		try {
 			JSONObject object = (JSONObject) parser.parse(json);
 			Post p = new Post();
@@ -61,31 +71,13 @@ public class Post {
 			p.setPostContent(object.get("postContent").toString());
 			p.setPostPrivacy(object.get("privacy").toString());
 			return p;
-		}
-		catch(ParseException e){
+		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		return null;	
+		return null;
 	}
+
+
+
 	
-	public Boolean savePost(String pOwner, String pContent, String pPrivacy) {
-		DatastoreService dataStore = DatastoreServiceFactory
-				.getDatastoreService();
-		Transaction t = dataStore.beginTransaction();
-		Query q = new Query("Post");
-		PreparedQuery pq = dataStore.prepare(q);
-		List<Entity> list = pq.asList(FetchOptions.Builder.withDefaults());
-		try {
-			Entity posts = new Entity("Posts", list.size() + 1);
-			posts.setProperty("postOwner", pOwner);
-			posts.setProperty("postContent", pContent);
-			posts.setProperty("postPrivacy", pPrivacy);
-			dataStore.put(posts);
-			t.commit();
-		} finally {
-			if (t.isActive())
-				t.rollback();
-		}
-		return true;
-	}
 }

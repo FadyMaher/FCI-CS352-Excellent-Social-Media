@@ -47,6 +47,13 @@ import com.google.appengine.labs.repackaged.org.json.JSONException;
 @Produces("text/html")
 public class UserController {
 
+/*	@GET
+	@Path("/sharePost")
+	public Response sharePost() {
+		return Response.ok(new Viewable("/jsp/SharePost")).build();
+	}*/
+	
+	
 	@GET
 	@Path("/Notification")
 	public Response Notification() {
@@ -141,13 +148,14 @@ public class UserController {
 	public Response search() {
 		return Response.ok(new Viewable("/jsp/search")).build();
 	}
+
 	@GET
 	@Path("/createPost")
-	public Response creatPost(){
+	public Response creatPost() {
 		System.out.println("michael");
 		return Response.ok(new Viewable("/jsp/CreatePost")).build();
 	}
-	
+
 	@GET
 	@Path("/SendMSG")
 	public Response sendmsg() {
@@ -353,20 +361,21 @@ public class UserController {
 	@POST
 	@Path("/createpost")
 	@Produces(MediaType.TEXT_PLAIN)
-	public String response_post(@FormParam("userPost") String uPost) {
+	public String response_post(@FormParam("postPrivacy") String postPrivacy,
+			@FormParam("postContent") String postContent) {
+		System.out.println("UP="+postPrivacy);
 		String serviceUrl = "http://localhost:8888/rest/createPostService";
-		String urlParameters = "userPost=" + uPost;
+		String urlParameters = "postPrivacy=" + postPrivacy +"postContent=" + postContent;
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
 				"application/x-www-form-urlencoded;charset=UTF-8");
 		JSONParser parser = new JSONParser();
 		Object obj;
 		try {
 			obj = parser.parse(retJson);
-			JSONObject object =(JSONObject) obj;
-			if(object.get("Status").equals("OK"))
+			JSONObject object = (JSONObject) obj;
+			if (object.get("Status").equals("OK"))
 				return "Your post saved successfully";
-		}
-		catch (ParseException e) {
+		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 		return "Failed";
@@ -399,5 +408,8 @@ public class UserController {
 		return "Failed";
 
 	}
+	
+	
+	
 
 }
