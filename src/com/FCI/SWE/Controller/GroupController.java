@@ -33,7 +33,7 @@ public class GroupController {
 
 	@POST
 	@Path("/CreateGroup")
-	public String createGroup(@FormParam("name") String name,
+	public static String createGroup(@FormParam("name") String name,
 			@FormParam("desc") String desc, @FormParam("privacy") String privacy) {
 
 		String serviceUrl = "http://excellent-social-media.appspot.com/rest/CreateGroupService";
@@ -68,7 +68,7 @@ public class GroupController {
 	@POST
 	@Path("/sendmybigmsg")
 	@Produces(MediaType.TEXT_PLAIN)
-	public String response_msg(
+	public static String response_msg(
 			@FormParam("convName") String cName,
 			@FormParam("reciversemail") String ReciverN,
 			@FormParam("gmsg") String msg) {

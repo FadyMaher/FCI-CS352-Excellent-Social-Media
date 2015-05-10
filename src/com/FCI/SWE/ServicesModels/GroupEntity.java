@@ -48,7 +48,7 @@ public class GroupEntity {
 		this.ownerId = id;
 	}
 	
-	public Boolean saveGroup() {
+	public  boolean saveGroup() {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		Query gaeQuery = new Query("groups");

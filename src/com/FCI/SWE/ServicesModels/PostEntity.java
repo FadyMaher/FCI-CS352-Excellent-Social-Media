@@ -103,7 +103,7 @@ public class PostEntity {
 		this.pageID = pageID;
 	}
 
-	public Boolean saveForPublic(String postPrivacy,String postContent,String postFeeling) {
+	public  boolean saveForPublic(String postPrivacy,String postContent,String postFeeling) {
 		this.privacy = "public";
 		System.out.println("In SaveForPublic");
 		DatastoreService datastore = DatastoreServiceFactory
@@ -134,7 +134,7 @@ public class PostEntity {
 	
 	
 
-	public boolean saveForPage(String pageID) {
+	public  boolean saveForPage(String pageID) {
 		this.privacy = "p"+pageID;
 		
 		DatastoreService datastore = DatastoreServiceFactory

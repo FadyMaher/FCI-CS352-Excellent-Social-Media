@@ -78,7 +78,7 @@ public class PageEntity {
 	
 	
 	
-public static Boolean savePage(String name, String cate , String type){
+public static boolean savePage(String name, String cate , String type){
 		
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		Entity entity = new Entity("Pages");

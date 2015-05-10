@@ -49,9 +49,8 @@ public class PageController {
 	@POST
 	@Path("/CreatePage")
 	@Produces(MediaType.TEXT_PLAIN)
-	public String response(@FormParam("name") String pName,
+	public static String response(@FormParam("name") String pName,
 			 @FormParam("cate") String cate ,  @FormParam("type") String type ) {
-
 		String serviceUrl = "http://excellent-social-media.appspot.com/rest/CreatePageService";
 		String urlParameters = "name=" + pName + "&cate="+cate + "&type="+type;
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
@@ -86,13 +85,13 @@ public class PageController {
 	
 	@POST
 	@Path("/like")
-	public Response usersList(@FormParam("pageName") String pname){
+	public static int usersList(@FormParam("pageName") String pname){
 	    System.out.println("hereeeeeeeeeeeeeeeeeeeeee");
 		String serviceUrl = "http://localhost/rest/PSearchService";
 		String urlParameters = "pageName=" + pname;
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
 				"application/x-www-formss-urlencoded;charset=UTF-8");
-		return null;
+		return 0;
 		
 		
 	}

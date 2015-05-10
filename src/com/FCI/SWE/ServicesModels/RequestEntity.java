@@ -12,19 +12,18 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Transaction;
 
 public class RequestEntity {
-	
+
 	private String Sender;
 	private String Reciver;
 	private String Status;
 
-	public RequestEntity (String Sender,String Reciver, String Status){
-		this.Sender=Sender;
-		this.Reciver=Reciver;
-		this.Status= Status;
-		
-		
+	public RequestEntity(String Sender, String Reciver, String Status) {
+		this.Sender = Sender;
+		this.Reciver = Reciver;
+		this.Status = Status;
+
 	}
-	
+
 	public String getSender() {
 		return Sender;
 	}
@@ -36,9 +35,8 @@ public class RequestEntity {
 	public String getStatus() {
 		return Status;
 	}
-	
-	
-	public Boolean saverequest(String senderEmail, String recieverEmail) {
+
+	public static Boolean saverequest(String senderEmail, String recieverEmail) {
 
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -54,8 +52,7 @@ public class RequestEntity {
 
 		return true;
 	}
-	
-	
+
 	public static Vector<RequestEntity> searchReq(String uemail) {
 
 		DatastoreService datastore = DatastoreServiceFactory
@@ -68,15 +65,14 @@ public class RequestEntity {
 		for (Entity entity : pq.asIterable()) {
 
 			String Cemail = entity.getProperty("RevicerEmail").toString();
-			
-			
-			if ( Cemail.equals(uemail)) {
-				
-				
-				RequestEntity req = new RequestEntity(entity.getProperty("RevicerEmail")
-						.toString(), entity.getProperty("SenderEmail").toString(),
-						entity.getProperty("Status").toString());
-				
+
+			if (Cemail.equals(uemail)) {
+
+				RequestEntity req = new RequestEntity(entity.getProperty(
+						"RevicerEmail").toString(), entity.getProperty(
+						"SenderEmail").toString(), entity.getProperty("Status")
+						.toString());
+
 				reqS.add(req);
 			}
 
@@ -84,9 +80,5 @@ public class RequestEntity {
 
 		return reqS;
 	}
-	
-	
-	
-	
 
 }

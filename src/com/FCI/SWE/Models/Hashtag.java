@@ -40,7 +40,7 @@ public class Hashtag {
 		List<Entity> list = pq.asList(FetchOptions.Builder.withDefaults());
 		try {
 			Entity posts = new Entity("Posts",list.size()+1);
-			posts.setProperty("HashtagID", postId);
+			//posts.setProperty("HashtagID", postId);
 			
 			dataStore.put(posts);
 			t.commit();

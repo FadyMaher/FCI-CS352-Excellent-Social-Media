@@ -38,7 +38,7 @@ public class MessageEntity {
 	}
 	
 	
-	public Boolean savemsg(String SE, String RE, String Msg) {
+	public static boolean savemsg(String SE, String RE, String Msg) {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		Transaction txn = datastore.beginTransaction();

@@ -47,13 +47,13 @@ import com.FCI.SWE.Models.Post;
 @Produces(MediaType.TEXT_PLAIN)
 public class UserServices {
 	
-	@POST
+/*	@POST
 	@Path("/timeline")
 	public String timeline( @FormParam("uname") String uname ) {
 		
 		return PostEntity.getAllPosts ( uname ) ;
 	}
-
+*/
 	/**
 	 * Registration Rest service, this service will be called to make
 	 * registration. This function will store user data in data store
@@ -77,7 +77,7 @@ public class UserServices {
 		return object.toString();
 	}
 
-
+/*
 	@POST
 	@Path("/createPostService")
 	public String createPostService(@FormParam("userPost") String uPost){
@@ -89,7 +89,9 @@ public class UserServices {
 		return object.toJSONString();
 	}
 
-
+*/
+	
+	
 	@POST
 	@Path("/sendmsgService")
 	public String sendmsgService(@FormParam("reciveremail") String ReciverE,
@@ -209,6 +211,7 @@ public class UserServices {
 		JSONObject object = new JSONObject();
 		object.put("Status", "OK");
 		return object.toString();
+		
 	}
 
 	@POST

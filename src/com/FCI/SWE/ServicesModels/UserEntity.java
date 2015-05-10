@@ -33,8 +33,6 @@ public class UserEntity {
 	private String email;
 	private String password;
 	private long id;
-	
-	
 
 	/**
 	 * Constructor accepts user data
@@ -51,15 +49,27 @@ public class UserEntity {
 		this.email = email;
 		this.password = password;
 	}
+
 	public UserEntity() {
-		
+
 	}
 
 	private void setId(long id) {
 		this.id = id;
 	}
 
-	
+	public void setName(String s) {
+		this.name = s;
+	}
+
+	public void setPass(String ss) {
+		this.password = ss;
+	}
+
+	public void setE(String sss) {
+		this.email = sss;
+	}
+
 	public long getId() {
 		return id;
 	}
@@ -76,7 +86,6 @@ public class UserEntity {
 		return password;
 	}
 
-
 	public static UserEntity getUser(String name, String pass) {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -90,12 +99,17 @@ public class UserEntity {
 						"name").toString(), entity.getProperty("email")
 						.toString(), entity.getProperty("password").toString());
 				returnedUser.setId(entity.getKey().getId());
+System.out.println(entity.getProperty("name"));
+System.out.println(entity.getProperty("email"));
+System.out.println(entity.getProperty("password"));
+
 				return returnedUser;
 			}
 		}
 
 		return null;
-	}	
+	}
+
 	public static boolean getrequest(String email, String femail) {
 
 		DatastoreService datastore = DatastoreServiceFactory
@@ -105,7 +119,7 @@ public class UserEntity {
 		PreparedQuery pq = datastore.prepare(gaeQuery);
 
 		for (Entity entity : pq.asIterable()) {
-			
+
 			if (entity.getProperty("ReciverEmail").toString().equals(email)
 					&& entity.getProperty("SenderEmail").toString()
 							.equals(femail)
@@ -126,7 +140,7 @@ public class UserEntity {
 	 * 
 	 * @return boolean if user is saved correctly or not
 	 */
-	public Boolean saveUser() {
+	public  Boolean saveUser() {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		Transaction txn = datastore.beginTransaction();
@@ -141,7 +155,6 @@ public class UserEntity {
 			employee.setProperty("name", this.name);
 			employee.setProperty("email", this.email);
 			employee.setProperty("password", this.password);
-
 			datastore.put(employee);
 			txn.commit();
 		} finally {
@@ -150,10 +163,7 @@ public class UserEntity {
 			}
 		}
 		return true;
-
 	}
-
-	
 
 	// /////////////////////////////////////////////////////////////////////
 
@@ -161,7 +171,7 @@ public class UserEntity {
 	// runnig the code
 	// the function in not work correctly
 
-	public Boolean saveGroupmsg(String CN, String SE, String RE, String Msg) {
+	public static Boolean  saveGroupmsg(String CN, String SE, String RE, String Msg) {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		Transaction txn = datastore.beginTransaction();
@@ -188,8 +198,6 @@ public class UserEntity {
 
 	// /////////////////////////////////////////////////////////////////
 
-	
-
 	public static Vector<UserEntity> searchUser(String uname) {
 
 		DatastoreService datastore = DatastoreServiceFactory
@@ -211,11 +219,12 @@ public class UserEntity {
 			}
 
 		}
-
+		
 		return users;
 	}
-	public Vector<String> getAllUsers(){
-		Vector<String> usersNames=new Vector<String>();
+
+	public static Vector<String> getAllUsers() {
+		Vector<String> usersNames = new Vector<String>();
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		Query gaeQuery = new Query("users");
@@ -225,8 +234,8 @@ public class UserEntity {
 		}
 		return usersNames;
 	}
-	
-	public Boolean savePagePost(String Writer, String Post, String Page) {
+
+	public static boolean savePagePost(String Writer, String Post, String Page) {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		Transaction txn = datastore.beginTransaction();
@@ -236,7 +245,7 @@ public class UserEntity {
 
 		try {
 			Entity PP = new Entity("Pages Posts", list.size() + 1);
-			PP.setProperty("Writer",Writer );
+			PP.setProperty("Writer", Writer);
 			PP.setProperty("Post", Post);
 			PP.setProperty("Page", Page);
 			PP.setProperty("NumberOfSeen", " ");
@@ -250,8 +259,8 @@ public class UserEntity {
 		return true;
 
 	}
-	
-	public Boolean saveUserPost(String Writer, String Post, String Felling) {
+
+	public static Boolean saveUserPost(String Writer, String Post, String Felling) {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		Transaction txn = datastore.beginTransaction();
@@ -261,11 +270,11 @@ public class UserEntity {
 
 		try {
 			Entity PP = new Entity("Users Posts", list.size() + 1);
-			PP.setProperty("User",Writer);
+			PP.setProperty("User", Writer);
 			PP.setProperty("Post", Post);
-			
+
 			PP.setProperty("Felling", Felling);
-		
+
 			datastore.put(PP);
 			txn.commit();
 		} finally {
@@ -276,7 +285,6 @@ public class UserEntity {
 		return true;
 
 	}
-	
 
 	public static UserEntity searchSingleUser(String uname) {
 		DatastoreService dataStore = DatastoreServiceFactory
@@ -287,15 +295,14 @@ public class UserEntity {
 			entity.getKey().getId();
 			String currentName = entity.getProperty("name").toString();
 			if (currentName.contains(uname)) {
-				UserEntity returnedUser = new UserEntity(entity.getProperty("name").toString(),
-						entity.getProperty("email").toString(), entity
-								.getProperty("password").toString());
+				UserEntity returnedUser = new UserEntity(entity.getProperty(
+						"name").toString(), entity.getProperty("email")
+						.toString(), entity.getProperty("password").toString());
 				returnedUser.setId(entity.getKey().getId());
-			return returnedUser;
+				return returnedUser;
 			}
 		}
 		return null;
 	}
-	
-	
+
 }

@@ -31,7 +31,7 @@ public class NotificationController {
 	
 	@GET
 	@Path("/allNotification")
-	public Response getAllNotification() {
+	public static Response getAllNotification() {
 		User user = User.getCurrentActiveUser();
 		String urlParams = "user="+user.getName();
 		String retJson = Connection.connect("http://excellent-social-media.appspot.com/rest/getNotification",
