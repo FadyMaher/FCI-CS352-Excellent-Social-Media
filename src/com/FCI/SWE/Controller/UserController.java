@@ -64,21 +64,25 @@ public class UserController {
 	 * Msg Notifiaction it's working till reach to the html page (Show MN) then
 	 * the error begain to appear the error in the final part of the code circle
 	 */
+	
+	// this function to get the notification with the type message from the datastore
 	@POST
 	@Path("/msgNotification")
 	public Response msgList(@FormParam("uemail") String uemail) {
 
-		String serviceUrl = "http://localhost:8888/rest/mshNS";
-		String urlParameters = "uemail=" + uemail;
+		String serviceUrl = "http://localhost:8888/rest/mshNS"; // service url
+		String urlParameters = "uemail=" + uemail;// take the name of the user that want to get his notification
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
 				"application/x-www-form-urlencoded;charset=UTF-8");
 
 		JSONParser parser = new JSONParser();
 		Map<String, Vector<Message>> passed_msgs = new HashMap<String, Vector<Message>>();
+		//vector hold the user and message send to him
+		
 		try {
 			JSONArray arr = (JSONArray) parser.parse(retJson);
 			Vector<Message> msgs = new Vector<Message>();
-			System.out.println(arr.size() + " Size");
+			
 			for (int i = 0; i < arr.size(); i++) {
 				JSONObject object;
 				object = (JSONObject) arr.get(i);
@@ -105,7 +109,7 @@ public class UserController {
 				"application/x-www-form-urlencoded;charset=UTF-8");
 
 		JSONParser parser = new JSONParser();
-		Map<String, Vector<Requests>> passed_reqs = new HashMap<String, Vector<Requests>>();
+		Map<String, Vector<Requests>> passedReqests = new HashMap<String, Vector<Requests>>();
 		try {
 			System.out.println("Fady 2");
 			JSONArray arr = (JSONArray) parser.parse(retJson);
@@ -117,8 +121,8 @@ public class UserController {
 				reqS.add(Requests.ParsereqInfo(object.toJSONString()));
 			}
 			System.out.println(reqS.toString());
-			passed_reqs.put("reqList", reqS);
-			return Response.ok(new Viewable("/jsp/showRN", passed_reqs))
+			passedReqests.put("reqList", reqS);
+			return Response.ok(new Viewable("/jsp/showRN",passedReqests))
 					.build();
 		} catch (ParseException e) {
 			System.out.println("Out of here");
@@ -234,10 +238,10 @@ public class UserController {
 	
 	@POST
 	@Path("/changePri")
-	public Response changePri(@FormParam("pID") String pID ,@FormParam("pPR") String pPR) {
+	public Response changePri(@FormParam("pID") String PrivacyID ,@FormParam("pPR") String Privacy) {
 		String serviceUrl = "http://localhost:8888/rest/chPService";
 		
-		String urlParameters = "pID=" + pID + "&pPR=" + pPR;
+		String urlParameters = "pID=" + PrivacyID + "&pPR=" +Privacy;
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
 				"application/x-www-form-urlencoded;charset=UTF-8");
 		JSONParser parser = new JSONParser();
@@ -373,11 +377,11 @@ public class UserController {
 	@Path("/sendingmyrequest")
 	@Produces(MediaType.TEXT_PLAIN)
 	public static String response_sendmyrequest(
-			@FormParam("senderemail") String Semail,
-			@FormParam("reciveremail") String Remail) {
+			@FormParam("senderemail") String Senderemail,
+			@FormParam("reciveremail") String Reviveremail) {
 
-		String urlParameters = "senderemail=" + Semail + "&reciveremail="
-				+ Remail;
+		String urlParameters = "senderemail=" + Senderemail + "&reciveremail="
+				+ Reviveremail;
 
 		String retJson = Connection.connect(
 				"http://localhost:8888/rest/SendrequestService", urlParameters,

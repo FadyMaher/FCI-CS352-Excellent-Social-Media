@@ -33,13 +33,14 @@ public class Hashtag {
 
 	
 	public Boolean saveHashtag(Vector<Long> v){
+		int x=1;
 		DatastoreService dataStore = DatastoreServiceFactory.getDatastoreService();
 		Transaction t = dataStore.beginTransaction();
 		Query q = new Query("Post");
 		PreparedQuery pq = dataStore.prepare(q);
 		List<Entity> list = pq.asList(FetchOptions.Builder.withDefaults());
 		try {
-			Entity posts = new Entity("Posts",list.size()+1);
+			Entity posts = new Entity("Posts",list.size()+x);
 			//posts.setProperty("HashtagID", postId);
 			
 			dataStore.put(posts);

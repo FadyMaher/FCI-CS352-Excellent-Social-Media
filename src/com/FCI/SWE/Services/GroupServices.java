@@ -15,6 +15,7 @@ import com.FCI.SWE.Models.User;
 import com.FCI.SWE.ServicesModels.GroupEntity;
 import com.FCI.SWE.ServicesModels.UserEntity;
 
+
 @Path("/")
 @Produces(MediaType.TEXT_PLAIN)
 public class GroupServices {
@@ -42,23 +43,24 @@ public class GroupServices {
 	public String sendmsgService(@FormParam("convName") String convName,
 			@FormParam("reciversemail") String ReciverE,
 			@FormParam("gmsg") String msg) {
-
-		UserEntity user = new UserEntity("", "", "");
+int x=100;
+UserEntity user = new UserEntity("", "", "");
 		User u = User.getCurrentActiveUser();
 		String currentUserEmail = u.getEmail();
 
 		ArrayList<String> R = new ArrayList<String>();
-		for (String retval : ReciverE.split(",", 100)) {
+		for (String retval : ReciverE.split(",", x)) {
 			R.add(retval);
 		}
 
-		
-		
 			user.saveGroupmsg(convName, currentUserEmail,R.toString(), msg);
 		
 		R.clear();
 		JSONObject object = new JSONObject();
 		object.put("Status", "OK");
 		return object.toString();
-	}
+
+
+
+}
 }

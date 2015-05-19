@@ -23,11 +23,8 @@ import com.FCI.SWE.Models.User;
 public class NotificationController {
 
 	
-	@GET
-	@Path("/test")
-	public String function(){
-		return "dsldksldkskdsd";
-	}
+	
+
 	
 	@GET
 	@Path("/allNotification")

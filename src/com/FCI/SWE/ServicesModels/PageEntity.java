@@ -79,14 +79,16 @@ public class PageEntity {
 	
 	
 public static boolean savePage(String name, String cate , String type){
-		
+		int x=0;
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		Entity entity = new Entity("Pages");
 		entity.setProperty("PageName", name);
 		entity.setProperty("cateogry", cate);
 		entity.setProperty("type", type);
-		entity.setProperty("likes" , 0) ;
-		if(datastore.put(entity)!=null)return true;
+		entity.setProperty("likes" , x) ;
+		if(datastore.put(entity)!=null)
+			return true;
+		else 
 		return false;
 	}
 	

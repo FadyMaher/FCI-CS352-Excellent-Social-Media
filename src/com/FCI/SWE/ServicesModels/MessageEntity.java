@@ -38,19 +38,19 @@ public class MessageEntity {
 	}
 	
 	
-	public static boolean savemsg(String SE, String RE, String Msg) {
+	public static boolean savemsg(String SenderEmail, String ReciverEmail, String Message) {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		Transaction txn = datastore.beginTransaction();
 		Query gaeQuery = new Query("Messages");
 		PreparedQuery pq = datastore.prepare(gaeQuery);
 		List<Entity> list = pq.asList(FetchOptions.Builder.withDefaults());
-
+int x=1;
 		try {
-			Entity MSG = new Entity("Messages", list.size() + 1);
-			MSG.setProperty("SenderEmail", SE);
-			MSG.setProperty("RevicerEmail", RE);
-			MSG.setProperty("Message", Msg);
+			Entity MSG = new Entity("Messages", list.size() + x);
+			MSG.setProperty("SenderEmail",SenderEmail);
+			MSG.setProperty("RevicerEmail", ReciverEmail);
+			MSG.setProperty("Message", Message);
 			datastore.put(MSG);
 			txn.commit();
 		} finally {

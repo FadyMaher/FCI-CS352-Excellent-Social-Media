@@ -110,7 +110,7 @@ System.out.println(entity.getProperty("password"));
 		return null;
 	}
 
-	public static boolean getrequest(String email, String femail) {
+	public static boolean getrequest(String email, String friendemail) {
 
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -122,7 +122,7 @@ System.out.println(entity.getProperty("password"));
 
 			if (entity.getProperty("ReciverEmail").toString().equals(email)
 					&& entity.getProperty("SenderEmail").toString()
-							.equals(femail)
+							.equals(friendemail)
 					&& entity.getProperty("Status").toString().equals("false")) {
 
 				entity.setProperty("Status", "true");
@@ -261,6 +261,7 @@ System.out.println(entity.getProperty("password"));
 	}
 
 	public static Boolean saveUserPost(String Writer, String Post, String Felling) {
+		int x=1;
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		Transaction txn = datastore.beginTransaction();
@@ -269,7 +270,7 @@ System.out.println(entity.getProperty("password"));
 		List<Entity> list = pq.asList(FetchOptions.Builder.withDefaults());
 
 		try {
-			Entity PP = new Entity("Users Posts", list.size() + 1);
+			Entity PP = new Entity("Users Posts", list.size() + x);
 			PP.setProperty("User", Writer);
 			PP.setProperty("Post", Post);
 

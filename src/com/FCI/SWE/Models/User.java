@@ -83,7 +83,7 @@ public class User {
 			currentActiveUser.setId(Long.parseLong(object.get("id").toString()));
 			return currentActiveUser;
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error");
 			e.printStackTrace();
 		}
 		return null;
@@ -104,7 +104,7 @@ public class User {
 			
 		} 
 		catch (ParseException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error");
 			e.printStackTrace();
 		}
 		return null;
@@ -113,7 +113,7 @@ public class User {
 
 	private void setName(String na) {
 		// TODO Auto-generated method stub
-	     na = name ;
+	     name = na ;
 	}
 
 	private void setEmail(String em) {

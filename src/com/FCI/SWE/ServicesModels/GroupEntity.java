@@ -64,16 +64,10 @@ public class GroupEntity {
 		
 		if(datastore.put(group).isComplete())
 			return true;
-		else return false;
+		
+		else 
+			return false;
 
 	}
 	
-
-
-
-
-
-
-
-
 }
